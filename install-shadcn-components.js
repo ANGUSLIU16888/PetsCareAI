@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+import { execSync } from 'child_process';
 
 const components = [
   'button',
@@ -16,9 +16,8 @@ const components = [
 components.forEach(component => {
   try {
     console.log(`Installing component: ${component}`);
-    execSync(`npx shadcn-ui@latest add ${component}`, {
-      stdio: 'inherit',
-      cwd: './pets-care-ai-frontend'
+    execSync(`/usr/local/bin/npx shadcn-ui@latest add ${component}`, {
+      stdio: 'inherit'
     });
   } catch (error) {
     console.error(`Failed to install ${component}:`, error.message);
