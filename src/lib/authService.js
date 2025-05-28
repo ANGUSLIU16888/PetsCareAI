@@ -1,7 +1,7 @@
 const mockUsers = [
-  { username: 'admin', password: 'password123', role: 'admin', name: 'Administrator' },
-  { username: 'editor', password: 'password123', role: 'editor', name: 'Content Editor' },
-  { username: 'viewer', password: 'password123', role: 'viewer', name: 'Regular Viewer' }
+  { username: 'petowner1', password: 'password123', role: 'pet_owner', name: 'Charlie Brown' },
+  { username: 'doctor1', password: 'password123', role: 'doctor', name: 'Dr. Lucy Van Pelt' },
+  { username: 'hospitalsysadmin1', password: 'password123', role: 'hospital_system_admin', name: 'Linus Admin' }
 ];
 
 export const login = async (username, password) => {

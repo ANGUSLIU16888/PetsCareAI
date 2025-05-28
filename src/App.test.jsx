@@ -1,30 +1,60 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
-import { describe, it, expect } from 'vitest';
-import { AuthProvider } from '@/context/AuthContext.jsx'; // Added
+import { describe, it, expect, vi } from 'vitest';
+import { useAuth } from '@/context/AuthContext.jsx'; // Import useAuth to mock it
+
+// Mock the useAuth hook
+vi.mock('@/context/AuthContext.jsx');
 
 describe('App', () => {
-  it('renders the main application page with demo title', () => {
-    render(
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    );
-    // To interact with the DemoPage, isAuthenticated would need to be true in AuthContext.
-    // For this test, we assume the LoginPage is shown by default (isAuthenticated=false).
-    // If testing DemoPage content, we'd need a way to set isAuthenticated to true for the test.
-    // For now, let's adjust the expectation to what's rendered by LoginPage by default.
-    // Make the selector more specific to target the CardTitle
+  it('renders LoginPage when not authenticated', () => {
+    useAuth.mockReturnValue({
+      isAuthenticated: false,
+      currentUser: null,
+    });
+    render(<App />);
     expect(screen.getByText('Login', { selector: 'div[data-slot="card-title"]' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
   });
 
-  it('renders the login button', () => { // Changed from "submit button" to "login button"
-    render(
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    );
-    // This will find the login button on the LoginPage
-    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+  it('renders generic Dashboard when authenticated with an unhandled role', () => {
+    useAuth.mockReturnValue({
+      isAuthenticated: true,
+      currentUser: { name: 'Test User', role: 'unknown_role' },
+      logout: vi.fn(), // Add mock logout if placeholder uses it
+    });
+    render(<App />);
+    expect(screen.getByText('Dashboard')).toBeInTheDocument(); // Main title for generic dashboard
+    expect(screen.getByText(/Welcome, Test User! Role: unknown_role/i)).toBeInTheDocument();
+  });
+
+  it('renders PetManagementPage when authenticated as pet_owner', () => {
+    useAuth.mockReturnValue({
+      isAuthenticated: true,
+      currentUser: { name: 'Charlie Brown', role: 'pet_owner' },
+      logout: vi.fn(),
+    });
+    render(<App />);
+    expect(screen.getByText('Pet Owner Dashboard')).toBeInTheDocument();
+  });
+
+  it('renders CaseReviewPage when authenticated as doctor', () => {
+    useAuth.mockReturnValue({
+      isAuthenticated: true,
+      currentUser: { name: 'Dr. Lucy Van Pelt', role: 'doctor' },
+      logout: vi.fn(),
+    });
+    render(<App />);
+    expect(screen.getByText('Doctor Dashboard')).toBeInTheDocument();
+  });
+
+  it('renders Hospital System Admin Dashboard when authenticated as hospital_system_admin', () => {
+    useAuth.mockReturnValue({
+      isAuthenticated: true,
+      currentUser: { name: 'Linus Admin', role: 'hospital_system_admin' },
+      logout: vi.fn(),
+    });
+    render(<App />);
+    expect(screen.getByText('Hospital System Admin Dashboard')).toBeInTheDocument();
   });
 });
