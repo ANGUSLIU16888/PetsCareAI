@@ -40,6 +40,61 @@ describe('authService', () => {
       expect(result.token).toBe('fake-jwt-token-for-hospitalsysadmin1');
     });
 
+    it('should login successfully as doctor_assistant', async () => {
+      const result = await login('docassist1', 'password123');
+      expect(result.success).toBe(true);
+      expect(result.user).toEqual({
+        username: 'docassist1',
+        role: 'doctor_assistant',
+        name: 'Nurse Joy'
+      });
+      expect(result.token).toBe('fake-jwt-token-for-docassist1');
+    });
+
+    it('should login successfully as attending_doctor', async () => {
+      const result = await login('attendingdoc1', 'password123');
+      expect(result.success).toBe(true);
+      expect(result.user).toEqual({
+        username: 'attendingdoc1',
+        role: 'attending_doctor',
+        name: 'Dr. Gregory House'
+      });
+      expect(result.token).toBe('fake-jwt-token-for-attendingdoc1');
+    });
+
+    it('should login successfully as dean', async () => {
+      const result = await login('dean1', 'password123');
+      expect(result.success).toBe(true);
+      expect(result.user).toEqual({
+        username: 'dean1',
+        role: 'dean',
+        name: 'Dean Lisa Cuddy'
+      });
+      expect(result.token).toBe('fake-jwt-token-for-dean1');
+    });
+
+    it('should login successfully as manager', async () => {
+      const result = await login('manager1', 'password123');
+      expect(result.success).toBe(true);
+      expect(result.user).toEqual({
+        username: 'manager1',
+        role: 'manager',
+        name: 'Michael Scott'
+      });
+      expect(result.token).toBe('fake-jwt-token-for-manager1');
+    });
+
+    it('should login successfully as external_expert', async () => {
+      const result = await login('externalexp1', 'password123');
+      expect(result.success).toBe(true);
+      expect(result.user).toEqual({
+        username: 'externalexp1',
+        role: 'external_expert',
+        name: 'Prof. Albus Dumbledore'
+      });
+      expect(result.token).toBe('fake-jwt-token-for-externalexp1');
+    });
+
     it('should fail login with incorrect username', async () => {
       const result = await login('wronguser', 'password123');
       expect(result.success).toBe(false);
